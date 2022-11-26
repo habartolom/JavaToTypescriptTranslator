@@ -1,5 +1,4 @@
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-    }
+public class Animal {
+  public void animalSound(); // interface method (does not have a body)
+  public void run(); // interface method (does not have a body)
 }
