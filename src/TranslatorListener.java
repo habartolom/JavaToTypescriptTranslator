@@ -67,4 +67,8 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     @Override
     public void enterStatement(JavaGrammarParser.StatementContext ctx) {
     }
+
+    @Override
+    public void exitStatement(JavaGrammarParser.StatementContext ctx) {
+    }
 }
