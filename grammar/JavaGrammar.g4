@@ -51,7 +51,7 @@ grammar JavaGrammar;
         : CLASS identifier typeParameters?
           (EXTENDS typeType)?
           (IMPLEMENTS typeList)?
-          (PERMITS typeList)? // Java17
+         // (PERMITS typeList)? // Java17
           classBody
         ;
 
@@ -68,7 +68,8 @@ grammar JavaGrammar;
         ;
 
     enumDeclaration
-        : ENUM identifier (IMPLEMENTS typeList)? '{' enumConstants? ','? enumBodyDeclarations? '}'
+        : ENUM identifier (IMPLEMENTS typeList)?
+        '{' enumConstants? ','? enumBodyDeclarations? '}'
         ;
 
     enumConstants
@@ -84,7 +85,8 @@ grammar JavaGrammar;
         ;
 
     interfaceDeclaration
-        : INTERFACE identifier typeParameters? (EXTENDS typeList)? interfaceBody
+        : INTERFACE identifier typeParameters?
+          (EXTENDS typeList)? interfaceBody
         ;
 
     classBody

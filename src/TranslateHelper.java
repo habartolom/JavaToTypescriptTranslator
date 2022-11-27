@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +12,71 @@ public class TranslateHelper {
         --indentation;
         System.out.println(String.join("", Collections.nCopies(indentation * 2, " ")) + "}");
     }
+
+    public static String getTypeScriptTypeDeclaration(JavaGrammarParser.TypeDeclarationContext ctx){
+        String typeDeclaration = "";
+        if(ctx.classDeclaration() != null)
+            typeDeclaration += getTypeScriptClassDeclaration(ctx.classDeclaration());
+        if(ctx.interfaceDeclaration() != null)
+            typeDeclaration += getTypeScriptInterfaceDeclaration(ctx.interfaceDeclaration());
+        if(ctx.enumDeclaration() != null)
+            typeDeclaration += getTypeScriptEnumDeclaration(ctx.enumDeclaration());
+        return typeDeclaration;
+    }
+
+    public static String getTypeScriptClassDeclaration(JavaGrammarParser.ClassDeclarationContext ctx){
+        String classDeclaration = "class ";
+        classDeclaration += ctx.identifier().getText() + " ";
+        if(ctx.typeParameters() != null)
+            classDeclaration += getTypeScriptTypeParameters(ctx.typeParameters());
+        if(ctx.EXTENDS() != null)
+            classDeclaration += "extends " + getTypeScriptTypeType(ctx.typeType());
+        if(ctx.IMPLEMENTS() != null)
+            classDeclaration += "implements " + getTypeScriptTypeList(ctx.typeList());
+        return classDeclaration;
+    }
+
+    public static String getTypeScriptTypeParameters(JavaGrammarParser.TypeParametersContext ctx){
+        String typeParameters = "<" + getTypeScriptTypeParameter(ctx.typeParameter().get(0));
+        if(ctx.typeParameter().size() > 1)
+            for (int i = 1; i < ctx.typeParameter().size(); i++)
+                typeParameters += "| " + getTypeScriptTypeParameter(ctx.typeParameter().get(i));
+        typeParameters += "> ";
+        return typeParameters;
+    }
+
+    public static String getTypeScriptTypeParameter(JavaGrammarParser.TypeParameterContext ctx){
+        String typeParameter = ctx.identifier().getText() + " ";
+        if(ctx.EXTENDS() != null)
+            typeParameter += "extends " + getTypeScriptTypeType(ctx.typeBound().typeType().get(0));
+            if(ctx.typeBound().typeType().size() > 1)
+                for (int i = 1; 1 < ctx.typeBound().typeType().size(); i++)
+                    typeParameter += ", " + getTypeScriptTypeType(ctx.typeBound().typeType().get(i));
+        return  typeParameter;
+    }
+
+    public static String getTypeScriptTypeList(JavaGrammarParser.TypeListContext ctx){
+        String typeList = getTypeScriptTypeType(ctx.typeType().get(0));
+        if(ctx.typeType().size() > 1) {
+            for (int i = 1; i < ctx.typeType().size(); i++)
+                typeList += ", " + getTypeScriptTypeType(ctx.typeType().get(i));
+        }
+        return typeList;
+    }
+
+    public static String getTypeScriptInterfaceDeclaration(JavaGrammarParser.InterfaceDeclarationContext ctx){
+        String interfaceDeclaration = "interface ";
+        interfaceDeclaration += ctx.identifier().getText() + " ";
+        if(ctx.typeParameters() != null)
+            interfaceDeclaration += getTypeScriptTypeParameters(ctx.typeParameters());
+        return interfaceDeclaration;
+    }
+
+    public static String getTypeScriptEnumDeclaration(JavaGrammarParser.EnumDeclarationContext ctx){
+        String enumDeclaration = "";
+        return enumDeclaration;
+    }
+
     public static String getTypescriptModifier(JavaGrammarParser.ModifierContext ctx){
 
         String modifier = "";
@@ -148,8 +214,48 @@ public class TranslateHelper {
     }
 
     public static String getTypeScriptBlockStatement(JavaGrammarParser.BlockStatementContext ctx){
-        String blockStatement = "statement";
+        String blockStatement = "";
+        if(ctx.localTypeDeclaration() != null)
+            blockStatement += getTypeScriptLocalVariableDeclaration(ctx.localVariableDeclaration());
+        if (ctx.statement() != null)
+            blockStatement += getTypeScriptStatement(ctx.statement());
+        if(ctx.localTypeDeclaration() != null)
+            blockStatement += getTypeScriptLocalTypeDeclaration(ctx.localTypeDeclaration());
         return blockStatement;
+    }
+
+    public static String getTypeScriptLocalVariableDeclaration(JavaGrammarParser.LocalVariableDeclarationContext ctx){
+        String localVariableDeclaration = "";
+        return localVariableDeclaration;
+    }
+
+    public static String getTypeScriptStatement(JavaGrammarParser.StatementContext ctx){
+        String statement = "";
+
+        if (ctx.ASSERT() != null) {
+            statement += "assert" + "(" + getTypeScriptExpression(ctx.expression().get(0));
+            if(ctx.expression().size() > 1)
+                statement += ": "+getTypeScriptExpression(ctx.expression().get(1));
+            statement += ")";
+        } else if (ctx.RETURN() != null) {
+            statement += "return";
+            if (ctx.expression() != null)
+                statement += " " + getTypeScriptExpression(ctx.expression().get(0));
+        } else if (ctx.THROW() != null) {
+            statement += "throw " + getTypeScriptExpression(ctx.expression().get(0));
+        }
+        return statement;
+    }
+
+    public static String getTypeScriptLocalTypeDeclaration(JavaGrammarParser.LocalTypeDeclarationContext ctx){
+        String localTypeDeclaration = "";
+        return localTypeDeclaration;
+    }
+
+    public static String getTypeScriptExpression(JavaGrammarParser.ExpressionContext ctx){
+        String expression = "";
+
+        return expression;
     }
 
 }
