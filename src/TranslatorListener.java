@@ -1,7 +1,16 @@
+import java.util.Collections;
+
 public class TranslatorListener extends JavaGrammarBaseListener {
 
+    @Override public void enterClassBody(JavaGrammarParser.ClassBodyContext ctx) {
+        TranslateHelper.startIndentation();
+    }
+    @Override public void exitClassBody(JavaGrammarParser.ClassBodyContext ctx) {
+        TranslateHelper.finishIndentation();
+    }
+
     @Override public void enterClassBodyDeclaration(JavaGrammarParser.ClassBodyDeclarationContext ctx) {
-        String classBodyDeclaration = "";
+        String classBodyDeclaration = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));
 
         if(ctx.modifier().size() > 0){
             classBodyDeclaration += TranslateHelper.getTypescriptModifier(ctx.modifier().get(0)) + " ";
@@ -17,7 +26,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     @Override
     public void enterTypeDeclaration(JavaGrammarParser.TypeDeclarationContext ctx) {
 
-        String example = "";
+        String example = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));;
 
         if(ctx.classDeclaration() != null){
             example += "class ";
@@ -34,5 +43,18 @@ public class TranslatorListener extends JavaGrammarBaseListener {
 
             System.out.println(example);
         }
+    }
+
+    @Override public void enterBlock(JavaGrammarParser.BlockContext ctx) {
+        TranslateHelper.startIndentation();
+        for(int i = 0; i < ctx.blockStatement().size(); i++){
+            String blockStatement = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));
+            blockStatement += TranslateHelper.getTypeScriptBlockStatement(ctx.blockStatement().get(i));
+            System.out.println(blockStatement);
+        }
+    }
+
+    @Override public void exitBlock(JavaGrammarParser.BlockContext ctx) {
+        TranslateHelper.finishIndentation();
     }
 }
