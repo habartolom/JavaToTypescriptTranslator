@@ -1,4 +1,7 @@
 public class Animal {
-  public void animalSound(); // interface method (does not have a body)
-  public void run(); // interface method (does not have a body)
+  public private void animalSound(); // interface method (does not have a body)
+  private void run(); // interface method (does not have a body)
+  public int getSum(){
+
+  }
 }
