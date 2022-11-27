@@ -1,7 +1,15 @@
 public class Animal<T> {
   public private void animalSound(); // interface method (does not have a body)
-  private void run(); // interface method (does not have a body)
-  public int getSum(int x, int y){
-    return x + y;
+  private void run(){
+
+    int x[][][];
+    public class Test{
+
+    }
+  };
+  public int getSum(int x, int y[][][]){
+    int sum = x + y;
+    int a, b, c[] = 0;
+    return sum;
   }
 }

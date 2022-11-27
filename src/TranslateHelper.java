@@ -3,14 +3,20 @@ import java.util.List;
 
 public class TranslateHelper {
     public static int indentation = 0;
+    public static int spaces = 2;
     public static void startIndentation(){
-        System.out.println(String.join("", Collections.nCopies(indentation * 2, " ")) + "{");
+        System.out.println(getStringIndentation() + "{");
         ++indentation;
     }
     public static void finishIndentation(){
         --indentation;
-        System.out.println(String.join("", Collections.nCopies(indentation * 2, " ")) + "}");
+        System.out.println(getStringIndentation() + "}");
     }
+
+    public static String getStringIndentation(){
+        return String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "));
+    }
+
     public static String getTypescriptModifier(JavaGrammarParser.ModifierContext ctx){
 
         String modifier = "";
@@ -138,18 +144,60 @@ public class TranslateHelper {
 
         formalParameter += getTypeScriptIdentifier(ctx.variableDeclaratorId().identifier()) + " : ";
         formalParameter += getTypeScriptTypeType(ctx.typeType());
+        formalParameter += getTypeScriptBracketsVariableDeclaratorId(ctx.variableDeclaratorId());
 
-        if(ctx.variableDeclaratorId().children.size() > 1){
-            for (int i = 1; i < ctx.variableDeclaratorId().children.size(); i++){
-                formalParameter += ctx.variableDeclaratorId().children.get(i).getText();
-            }
-        }
         return formalParameter;
     }
 
     public static String getTypeScriptBlockStatement(JavaGrammarParser.BlockStatementContext ctx){
-        String blockStatement = "statement";
+        String blockStatement = "";
+
+        if(ctx.localVariableDeclaration() != null)
+            blockStatement += geTypeScriptLocalVariableDeclaration(ctx.localVariableDeclaration());
+        else if(ctx.statement() != null)
+            blockStatement += getTypeScriptStatement(ctx.statement());
+        else
+            blockStatement += getTypeScriptLocalTypeDeclaration(ctx.localTypeDeclaration());
+
         return blockStatement;
+    }
+
+    public static String geTypeScriptLocalVariableDeclaration(JavaGrammarParser.LocalVariableDeclarationContext ctx){
+        String localVariableDeclaration = "";
+
+        String typeType = getTypeScriptTypeType(ctx.typeType());
+
+        for (int i = 0; i < ctx.variableDeclarators().variableDeclarator().size(); i++){
+            String variableDeclaration = getStringIndentation();
+
+            variableDeclaration += getTypeScriptIdentifier(ctx.variableDeclarators().variableDeclarator(i).variableDeclaratorId().identifier()) + " : ";
+            variableDeclaration += typeType;
+            variableDeclaration += getTypeScriptBracketsVariableDeclaratorId(ctx.variableDeclarators().variableDeclarator(i).variableDeclaratorId());
+
+            localVariableDeclaration += variableDeclaration + ";\n";
+        }
+
+        return localVariableDeclaration;
+    }
+    public static String getTypeScriptStatement(JavaGrammarParser.StatementContext ctx){
+        String statement = "statement";
+        return statement;
+    }
+    public static String getTypeScriptLocalTypeDeclaration(JavaGrammarParser.LocalTypeDeclarationContext ctx){
+        String localTypeDeclaration = "localTypeDeclaration";
+        return localTypeDeclaration;
+    }
+
+    public static String getTypeScriptBracketsVariableDeclaratorId(JavaGrammarParser.VariableDeclaratorIdContext ctx){
+        String bracketsVariableDeclaratorId = "";
+
+        if(ctx.children.size() > 1){
+            for (int i = 1; i < ctx.children.size(); i++){
+                bracketsVariableDeclaratorId += ctx.children.get(i).getText();
+            }
+        }
+
+        return bracketsVariableDeclaratorId;
     }
 
 }

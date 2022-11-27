@@ -10,7 +10,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     }
 
     @Override public void enterClassBodyDeclaration(JavaGrammarParser.ClassBodyDeclarationContext ctx) {
-        String classBodyDeclaration = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));
+        String classBodyDeclaration = TranslateHelper.getStringIndentation();
 
         if(ctx.modifier().size() > 0){
             classBodyDeclaration += TranslateHelper.getTypescriptModifier(ctx.modifier().get(0)) + " ";
@@ -26,7 +26,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     @Override
     public void enterTypeDeclaration(JavaGrammarParser.TypeDeclarationContext ctx) {
 
-        String example = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));;
+        String example = TranslateHelper.getStringIndentation();
 
         if(ctx.classDeclaration() != null){
             example += "class ";
@@ -49,7 +49,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
         TranslateHelper.startIndentation();
 
         for(int i = 0; i < ctx.blockStatement().size(); i++){
-            String blockStatement = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));
+            String blockStatement = "";
             blockStatement += TranslateHelper.getTypeScriptBlockStatement(ctx.blockStatement().get(i));
             System.out.println(blockStatement);
         }
