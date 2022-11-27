@@ -5,6 +5,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     @Override public void enterClassBody(JavaGrammarParser.ClassBodyContext ctx) {
         TranslateHelper.startIndentation();
     }
+    
     @Override public void exitClassBody(JavaGrammarParser.ClassBodyContext ctx) {
         TranslateHelper.finishIndentation();
     }
@@ -43,6 +44,10 @@ public class TranslatorListener extends JavaGrammarBaseListener {
 
             System.out.println(example);
         }
+
+        String typeDeclaration = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));;
+        typeDeclaration = TranslateHelper.getTypeScriptTypeDeclaration(ctx);
+        System.out.print(typeDeclaration);
     }
 
     @Override public void enterBlock(JavaGrammarParser.BlockContext ctx) {
@@ -57,5 +62,9 @@ public class TranslatorListener extends JavaGrammarBaseListener {
 
     @Override public void exitBlock(JavaGrammarParser.BlockContext ctx) {
         TranslateHelper.finishIndentation();
+    }
+
+    @Override
+    public void enterStatement(JavaGrammarParser.StatementContext ctx) {
     }
 }
