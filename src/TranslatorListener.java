@@ -26,25 +26,6 @@ public class TranslatorListener extends JavaGrammarBaseListener {
 
     @Override
     public void enterTypeDeclaration(JavaGrammarParser.TypeDeclarationContext ctx) {
-
-        String example = TranslateHelper.getStringIndentation();
-
-        if(ctx.classDeclaration() != null){
-            example += "class ";
-            String nameClass = TranslateHelper.getTypeScriptIdentifier(ctx.classDeclaration().identifier());
-            example += nameClass;
-
-            System.out.println(example);
-        }
-
-        if (ctx.interfaceDeclaration() != null) {
-            example += "interface ";
-            String nameClass = TranslateHelper.getTypeScriptIdentifier(ctx.classDeclaration().identifier());
-            example += nameClass;
-
-            System.out.println(example);
-        }
-
         String typeDeclaration = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));;
         typeDeclaration = TranslateHelper.getTypeScriptTypeDeclaration(ctx);
         System.out.print(typeDeclaration);
