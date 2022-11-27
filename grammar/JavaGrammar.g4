@@ -55,7 +55,7 @@ grammar JavaGrammar;
           classBody
         ;
 
-    typeParameters
+    typeParameters              // Mateo Genericos
         : '<' typeParameter (',' typeParameter)* '>'
         ;
 
@@ -450,19 +450,19 @@ grammar JavaGrammar;
 
     statement
         : blockLabel=block
-        | ASSERT expression (':' expression)? ';'
-        | IF parExpression statement (ELSE statement)?
-        | FOR '(' forControl ')' statement
-        | WHILE parExpression statement
-        | DO statement WHILE parExpression ';'
-        | TRY block (catchClause+ finallyBlock? | finallyBlock)
-        | TRY resourceSpecification block catchClause* finallyBlock?
-        | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'
+        | ASSERT expression (':' expression)? ';'                   // Mateo
+        | IF parExpression statement (ELSE statement)?              // Kevin
+        | FOR '(' forControl ')' statement                          //Harold
+        | WHILE parExpression statement                                 //Harold
+        | DO statement WHILE parExpression ';'                          //Harold
+        | TRY block (catchClause+ finallyBlock? | finallyBlock)         // Kevin
+        | TRY resourceSpecification block catchClause* finallyBlock?         // Kevin
+        | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'          // Kevin
         | SYNCHRONIZED parExpression block
-        | RETURN expression? ';'
-        | THROW expression ';'
-        | BREAK identifier? ';'
-        | CONTINUE identifier? ';'
+        | RETURN expression? ';'         // Mateo
+        | THROW expression ';'         // Mateo
+        | BREAK identifier? ';'         // Harold y Kevin
+        | CONTINUE identifier? ';'         // Harold
         | YIELD expression ';' // Java17
         | SEMI
         | statementExpression=expression ';'

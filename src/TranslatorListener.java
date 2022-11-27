@@ -47,6 +47,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
 
     @Override public void enterBlock(JavaGrammarParser.BlockContext ctx) {
         TranslateHelper.startIndentation();
+
         for(int i = 0; i < ctx.blockStatement().size(); i++){
             String blockStatement = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));
             blockStatement += TranslateHelper.getTypeScriptBlockStatement(ctx.blockStatement().get(i));
