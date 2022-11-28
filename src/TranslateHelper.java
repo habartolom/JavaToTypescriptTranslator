@@ -226,24 +226,25 @@ public class TranslateHelper {
     }
 
     public static String getTypeScriptMethodBody(JavaGrammarParser.MethodBodyContext ctx){
-        String methodBody = getStringIndentation() + "{\n";
-        indentation++;
+        String methodBody = "";
 
         if(ctx.block() != null)
             methodBody += getTypeScriptBlock(ctx.block());
 
-        indentation--;
-        methodBody += getStringIndentation() + "}\n";
         return methodBody;
     }
 
     public static String getTypeScriptBlock(JavaGrammarParser.BlockContext ctx){
+        String block = getStringIndentation() + "{\n";
+        indentation++;
 
-
-        String block = "";
         for(int i = 0; i < ctx.blockStatement().size(); i++){
             block += getTypeScriptBlockStatement(ctx.blockStatement(i));
         }
+
+        indentation--;
+        block += getStringIndentation() + "}\n";
+
         return block;
     }
 
@@ -285,11 +286,7 @@ public class TranslateHelper {
         String statement = getStringIndentation();
 
         if (ctx.block() != null){
-            statement += "{\n";
-            indentation++;
             statement += getTypeScriptBlock(ctx.block());
-            indentation--;
-            statement += getStringIndentation() + "}";
         }
 
         else if (ctx.ASSERT() != null) {
@@ -341,6 +338,11 @@ public class TranslateHelper {
             statement += " while (";
             statement += getTypeScriptExpression(ctx.parExpression().expression());
             statement += ");\n";
+        }
+
+        else if (ctx.TRY() != null){
+            statement += "try ";
+            statement += getTypeScriptTryComplement(ctx.tryComplement()).trim();
         }
 
         else if(ctx.statementExpression != null){
@@ -521,5 +523,38 @@ public class TranslateHelper {
         }
 
         return forInit;
+    }
+
+    public static String getTypeScriptTryComplement(JavaGrammarParser.TryComplementContext ctx){
+        String tryComplement = "";
+
+        if(ctx.block() != null){
+            tryComplement += getTypeScriptBlock(ctx.block());
+        }
+
+        if(ctx.catchClause() != null){
+            for(int i = 0; i < ctx.catchClause().size(); i++)
+                tryComplement += getTypeScriptCatchClause(ctx.catchClause(i));
+        }
+
+        if(ctx.finallyBlock() != null)
+            tryComplement += getTypeScriptFinallyBlock(ctx.finallyBlock());
+
+        return tryComplement;
+    }
+
+    public static String getTypeScriptCatchClause(JavaGrammarParser.CatchClauseContext ctx){
+        String catchClause = getStringIndentation();
+        catchClause += "catch (";
+        catchClause += ") ";
+        catchClause += getTypeScriptBlock(ctx.block()).trim() + "\n";
+        return catchClause;
+    }
+
+    public static String getTypeScriptFinallyBlock(JavaGrammarParser.FinallyBlockContext ctx){
+        String finallyBlock = getStringIndentation();
+        finallyBlock += "finally ";
+        finallyBlock += getTypeScriptBlock(ctx.block()).trim() + "\n";
+        return finallyBlock;
     }
 }

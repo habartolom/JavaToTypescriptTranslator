@@ -847,6 +847,16 @@ public interface JavaGrammarListener extends ParseTreeListener {
 	 */
 	void exitStatement(JavaGrammarParser.StatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link JavaGrammarParser#tryComplement}.
+	 * @param ctx the parse tree
+	 */
+	void enterTryComplement(JavaGrammarParser.TryComplementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link JavaGrammarParser#tryComplement}.
+	 * @param ctx the parse tree
+	 */
+	void exitTryComplement(JavaGrammarParser.TryComplementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link JavaGrammarParser#catchClause}.
 	 * @param ctx the parse tree
 	 */

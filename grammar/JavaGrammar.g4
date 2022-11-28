@@ -457,8 +457,7 @@ grammar JavaGrammar;
         | FOR '(' forControl ')' statement                          //Harold
         | WHILE parExpression statement                                 //Harold
         | DO statement WHILE parExpression ';'                          //Harold
-        | TRY block (catchClause+ finallyBlock? | finallyBlock)         // Kevin
-        | TRY resourceSpecification block catchClause* finallyBlock?         // Kevin
+        | TRY tryComplement         // Kevin
         | SWITCH parExpression '{' switchBlockStatementGroup* switchLabel* '}'          // Kevin
         | SYNCHRONIZED parExpression block
         | RETURN expression? ';'         // Mateo
@@ -470,6 +469,11 @@ grammar JavaGrammar;
         | statementExpression=expression ';'
         | switchExpression ';'? // Java17
         | identifierLabel=identifier ':' statement
+        ;
+
+    tryComplement
+        : block (catchClause+ finallyBlock? | finallyBlock)         // Kevin
+        | resourceSpecification block catchClause* finallyBlock?         // Kevin
         ;
 
     catchClause

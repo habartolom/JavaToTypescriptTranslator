@@ -514,6 +514,12 @@ public interface JavaGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(JavaGrammarParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link JavaGrammarParser#tryComplement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTryComplement(JavaGrammarParser.TryComplementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link JavaGrammarParser#catchClause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

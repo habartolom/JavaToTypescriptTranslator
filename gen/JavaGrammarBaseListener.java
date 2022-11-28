@@ -1023,6 +1023,18 @@ public class JavaGrammarBaseListener implements JavaGrammarListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterTryComplement(JavaGrammarParser.TryComplementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTryComplement(JavaGrammarParser.TryComplementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCatchClause(JavaGrammarParser.CatchClauseContext ctx) { }
 	/**
 	 * {@inheritDoc}

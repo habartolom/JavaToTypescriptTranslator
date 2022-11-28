@@ -1,16 +1,12 @@
-public class TranslateHelper {
-    public static int indentation = 0;
-    public static int spaces = 2;
-    public static void startIndentation(){
-        System.out.println(getStringIndentation() + "{");
-        ++indentation;
-        String a+;
-
-        Myclass myClass = new MyClass(a, b);
+public class Main {
+  public static void main(String[] args) {
+    try {
+      int[] myNumbers = {1, 2, 3};
+      System.out.println(myNumbers[10]);
+    } catch (Exception e) {
+      System.out.println("Something went wrong.");
+    } finally {
+      System.out.println("The 'try catch' is finished.");
     }
-    public static void finishIndentation(){
-        --indentation;
-        System.out.println(getStringIndentation() + "}");
-        ctx.expression().size();
-    }
+  }
 }
