@@ -1,15 +1,38 @@
 public class Animal<T extends algo>  implements a, b, c{
   public private void animalSound(); // interface method (does not have a body)
   private void run(){
+    x = 5;
+    int x = 5;
 
-    int x[][][];
-    public class Test{
-
+    while(x > 0){
+        x--;
+        int y = 5;
     }
-  };
-  public int getSum(int x, int y[][][]){
-    int sum = x + y;
-    int a, b, c[] = 0;
-    return sum;
+
+    for(int i = 0; i < 10; i++){
+        int y = 5;
+        i + y;
+    }
+
+    do {
+       int y = 5;
+    } while (i < 10);
+
+
+    if(a > 5){
+        x = 5;
+        int y = 5;
+    }
+    else if (a > 10){
+        x = 10;
+        int y = 5;
+    }
+    else{
+        x = 0;
+        int y = 5;
+    }
+
+
+
   }
 }

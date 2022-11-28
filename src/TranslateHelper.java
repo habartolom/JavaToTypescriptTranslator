@@ -123,7 +123,8 @@ public class TranslateHelper {
 
         methodDeclaration += getTypeScriptIdentifier(ctx.identifier()) + " ";
         methodDeclaration += getTypeScriptFormalParameters(ctx.formalParameters());
-        methodDeclaration += " : " + getTypeScriptTypeTypeOrVoid(ctx.typeTypeOrVoid());
+        methodDeclaration += " : " + getTypeScriptTypeTypeOrVoid(ctx.typeTypeOrVoid()) + "\n";
+        methodDeclaration += getTypeScriptMethodBody(ctx.methodBody());
 
         return methodDeclaration;
     }
@@ -215,56 +216,126 @@ public class TranslateHelper {
         return formalParameter;
     }
 
+    public static String getTypeScriptMethodBody(JavaGrammarParser.MethodBodyContext ctx){
+        String methodBody = getStringIndentation() + "{\n";
+        indentation++;
+
+        if(ctx.block() != null)
+            methodBody += getTypeScriptBlock(ctx.block());
+
+        indentation--;
+        methodBody += getStringIndentation() + "}\n";
+        return methodBody;
+    }
+
+    public static String getTypeScriptBlock(JavaGrammarParser.BlockContext ctx){
+        String block = "";
+        for(int i = 0; i < ctx.blockStatement().size(); i++){
+            block += getTypeScriptBlockStatement(ctx.blockStatement(i));
+        }
+        return block;
+    }
+
     public static String getTypeScriptBlockStatement(JavaGrammarParser.BlockStatementContext ctx){
         String blockStatement = "";
 
         if(ctx.localVariableDeclaration() != null)
-            blockStatement += geTypeScriptLocalVariableDeclaration(ctx.localVariableDeclaration());
+            blockStatement += getTypeScriptLocalVariableDeclaration(ctx.localVariableDeclaration());
         else if(ctx.statement() != null)
             blockStatement += getTypeScriptStatement(ctx.statement());
-        else
-            blockStatement += getTypeScriptLocalTypeDeclaration(ctx.localTypeDeclaration());
 
         return blockStatement;
     }
 
-    public static String geTypeScriptLocalVariableDeclaration(JavaGrammarParser.LocalVariableDeclarationContext ctx){
-        String localVariableDeclaration = "";
+    public static String getTypeScriptLocalVariableDeclaration(JavaGrammarParser.LocalVariableDeclarationContext ctx){
+        String localVariableDeclaration = getStringIndentation();
+        localVariableDeclaration += "let ";
 
         String typeType = getTypeScriptTypeType(ctx.typeType());
 
         for (int i = 0; i < ctx.variableDeclarators().variableDeclarator().size(); i++){
-            String variableDeclaration = getStringIndentation();
+            String variableDeclaration = "";
 
             variableDeclaration += getTypeScriptIdentifier(ctx.variableDeclarators().variableDeclarator(i).variableDeclaratorId().identifier()) + " : ";
             variableDeclaration += typeType;
             variableDeclaration += getTypeScriptBracketsVariableDeclaratorId(ctx.variableDeclarators().variableDeclarator(i).variableDeclaratorId());
 
-            localVariableDeclaration += variableDeclaration + ";\n";
+            if(ctx.variableDeclarators().variableDeclarator(i).variableInitializer() != null)
+                variableDeclaration += getTypeScriptVariableInitializer(ctx.variableDeclarators().variableDeclarator(i).variableInitializer());
+
+            localVariableDeclaration += variableDeclaration + ", ";
         }
 
-        return localVariableDeclaration;
+        return localVariableDeclaration.substring(0, localVariableDeclaration.length() - 2) + ";\n";
     }
-    public static String getTypeScriptStatement(JavaGrammarParser.StatementContext ctx){
-        String statement = "";
 
-        if (ctx.ASSERT() != null) {
-            statement += "assert" + "(" + getTypeScriptExpression(ctx.expression().get(0));
+    public static String getTypeScriptStatement(JavaGrammarParser.StatementContext ctx){
+        String statement = getStringIndentation();
+
+        if (ctx.block() != null){
+            statement += "{\n";
+            indentation++;
+            statement += getTypeScriptBlock(ctx.block());
+            indentation--;
+            statement += getStringIndentation() + "}";
+        }
+
+        else if (ctx.ASSERT() != null) {
+            statement += "assert" + "(" + getTypeScriptExpression(ctx.expression(0));
             if(ctx.expression().size() > 1)
-                statement += ": "+getTypeScriptExpression(ctx.expression().get(1));
+                statement += ": "+getTypeScriptExpression(ctx.expression(1));
             statement += ")";
-        } else if (ctx.RETURN() != null) {
+        }
+
+        else if (ctx.IF() != null){
+            statement += "if (";
+            statement += getTypeScriptExpression(ctx.parExpression().expression());
+            statement += ")\n";
+            statement += getTypeScriptStatement(ctx.statement(0));
+
+            if(ctx.ELSE() != null){
+                statement += getStringIndentation() + "else ";
+                statement += getTypeScriptStatement(ctx.statement(1)).trim();
+            }
+        }
+
+        else if (ctx.RETURN() != null) {
             statement += "return";
             if (ctx.expression() != null)
-                statement += " " + getTypeScriptExpression(ctx.expression().get(0));
-        } else if (ctx.THROW() != null) {
-            statement += "throw " + getTypeScriptExpression(ctx.expression().get(0));
+                statement += " " + getTypeScriptExpression(ctx.expression(0)) + ";";
         }
-        return statement;
-    }
-    public static String getTypeScriptLocalTypeDeclaration(JavaGrammarParser.LocalTypeDeclarationContext ctx){
-        String localTypeDeclaration = "localTypeDeclaration";
-        return localTypeDeclaration;
+
+        else if (ctx.THROW() != null) {
+            statement += "throw " + getTypeScriptExpression(ctx.expression(0));
+        }
+
+        else if (ctx.FOR() != null){
+            statement += "for (";
+            statement += getTypeScriptForControl(ctx.forControl());
+            statement += ")\n";
+            statement += getTypeScriptStatement(ctx.statement(0));
+        }
+
+        else if (ctx.DO() == null && ctx.WHILE() != null){
+            statement += "while (";
+            statement += getTypeScriptExpression(ctx.parExpression().expression());
+            statement += ")\n";
+            statement += getTypeScriptStatement(ctx.statement(0));
+        }
+
+        else if (ctx.DO() != null && ctx.WHILE() != null){
+            statement += "do ";
+            statement += getTypeScriptStatement(ctx.statement(0)).trim();
+            statement += " while (";
+            statement += getTypeScriptExpression(ctx.parExpression().expression());
+            statement += ");\n";
+        }
+
+        else if(ctx.statementExpression != null){
+            statement += getTypeScriptExpression(ctx.statementExpression) + ";";
+        }
+
+        return statement + "\n";
     }
 
     public static String getTypeScriptBracketsVariableDeclaratorId(JavaGrammarParser.VariableDeclaratorIdContext ctx){
@@ -279,15 +350,97 @@ public class TranslateHelper {
         return bracketsVariableDeclaratorId;
     }
 
-    public static String getTypeScriptLocalVariableDeclaration(JavaGrammarParser.LocalVariableDeclarationContext ctx){
-        String localVariableDeclaration = "";
-        return localVariableDeclaration;
+    public static String getTypeScriptVariableInitializer(JavaGrammarParser.VariableInitializerContext ctx){
+        String variableInitializer = " = ";
+
+        if(ctx.expression() != null)
+            variableInitializer += getTypeScriptExpression(ctx.expression());
+
+
+        return  variableInitializer;
+    }
+
+    public static String getTypeScriptExpressionList(JavaGrammarParser.ExpressionListContext ctx){
+        String expressionList = getTypeScriptExpression(ctx.expression(0));
+
+        for(int i = 1; i < ctx.expression().size(); i++){
+            expressionList += ", " + getTypeScriptExpression(ctx.expression(i));
+        }
+
+        return expressionList;
     }
 
     public static String getTypeScriptExpression(JavaGrammarParser.ExpressionContext ctx){
+
         String expression = "";
+
+        if(ctx.primary() != null)
+            expression += getTypeScriptPrimary(ctx.primary());
+
+        if(ctx.bop != null){
+            expression += getTypeScriptExpression(ctx.expression(0));
+            expression += " " + ctx.bop.getText() + " ";
+            expression += getTypeScriptExpression(ctx.expression(1));
+        }
+
+
+
+        if(ctx.postfix != null){
+            expression += getTypeScriptExpression(ctx.expression(0));
+            expression += ctx.postfix.getText();
+        }
 
         return expression;
     }
 
+    public static String getTypeScriptPrimary(JavaGrammarParser.PrimaryContext ctx){
+        String primary = "";
+
+        if(ctx.identifier() != null)
+            primary += getTypeScriptIdentifier(ctx.identifier());
+
+        if(ctx.literal() != null)
+            primary += getTypeScriptLiteral(ctx.literal());
+
+        return primary;
+    }
+
+    public static String getTypeScriptLiteral(JavaGrammarParser.LiteralContext ctx){
+        String literal = "";
+
+        if(ctx.integerLiteral() != null){
+
+        }
+
+        literal += ctx.getText();
+
+        return literal;
+    }
+
+    public static String getTypeScriptForControl(JavaGrammarParser.ForControlContext ctx){
+        String forControl = "";
+
+        if(ctx.enhancedForControl() == null){
+            if(ctx.forInit() != null)
+                forControl += getTypeScriptForInit(ctx.forInit());
+
+            if(ctx.expression() != null)
+                forControl += " " + getTypeScriptExpression(ctx.expression()) + " ; ";
+
+            if(ctx.expressionList() != null)
+                forControl += getTypeScriptExpressionList(ctx.expressionList());
+        }
+
+        return forControl;
+    }
+    public static String getTypeScriptForInit(JavaGrammarParser.ForInitContext ctx){
+        String forInit = "";
+
+        if(ctx.localVariableDeclaration() != null){
+            String localVariableDeclaration = getTypeScriptLocalVariableDeclaration(ctx.localVariableDeclaration()).trim();
+            forInit += localVariableDeclaration.substring(0, localVariableDeclaration.length() - 1) + " ;";
+        }
+
+        return forInit;
+    }
 }

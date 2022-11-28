@@ -26,30 +26,8 @@ public class TranslatorListener extends JavaGrammarBaseListener {
 
     @Override
     public void enterTypeDeclaration(JavaGrammarParser.TypeDeclarationContext ctx) {
-        String typeDeclaration = String.join("", Collections.nCopies(TranslateHelper.indentation * 2, " "));;
-        typeDeclaration = TranslateHelper.getTypeScriptTypeDeclaration(ctx);
+        String typeDeclaration = TranslateHelper.getStringIndentation();
+        typeDeclaration += TranslateHelper.getTypeScriptTypeDeclaration(ctx);
         System.out.print(typeDeclaration);
-    }
-
-    @Override public void enterBlock(JavaGrammarParser.BlockContext ctx) {
-        TranslateHelper.startIndentation();
-
-        for(int i = 0; i < ctx.blockStatement().size(); i++){
-            String blockStatement = "";
-            blockStatement += TranslateHelper.getTypeScriptBlockStatement(ctx.blockStatement().get(i));
-            System.out.println(blockStatement);
-        }
-    }
-
-    @Override public void exitBlock(JavaGrammarParser.BlockContext ctx) {
-        TranslateHelper.finishIndentation();
-    }
-
-    @Override
-    public void enterStatement(JavaGrammarParser.StatementContext ctx) {
-    }
-
-    @Override
-    public void exitStatement(JavaGrammarParser.StatementContext ctx) {
     }
 }
