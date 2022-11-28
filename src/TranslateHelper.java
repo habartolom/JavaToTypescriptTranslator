@@ -147,6 +147,9 @@ public class TranslateHelper {
         if(ctx.classOrInterfaceType() != null)
             typeType += getTypeScriptClassOrInterfaceType(ctx.classOrInterfaceType());
 
+        for(int i = 0; i < ctx.LBRACK().size(); i++)
+            typeType += "[]";
+
         return typeType;
     }
 
@@ -162,8 +165,14 @@ public class TranslateHelper {
     public static String getTypeScriptIdentifier(JavaGrammarParser.IdentifierContext ctx){
         String identifier = "";
 
-        if(ctx.IDENTIFIER() != null)
-            identifier = ctx.IDENTIFIER().getText();
+        if(ctx.IDENTIFIER() != null){
+
+            if(ctx.IDENTIFIER().getText().equals("String"))
+                identifier = "string";
+            else
+                identifier = ctx.IDENTIFIER().getText();
+
+        }
 
         return  identifier;
     }

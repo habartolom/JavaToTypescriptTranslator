@@ -1,6 +1,5 @@
 public class Animal<T extends algo>  implements a, b, c{
-  public private void animalSound(); // interface method (does not have a body)
-  private void run(){
+  public static void Main(String[] args){
     x = 5;
     int x = 5;
 
