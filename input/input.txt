@@ -1,37 +1,16 @@
-public class Animal<T extends algo>  implements a, b, c{
-  public static void Main(String[] args){
-    x = 5;
-    int x = 5;
+public class TranslateHelper {
+    public static int indentation = 0;
+    public static int spaces = 2;
+    public static void startIndentation(){
+        System.out.println(getStringIndentation() + "{");
+        ++indentation;
+        String a+;
 
-    while(x > 0){
-        x--;
-        int y = 5;
+        Myclass myClass = new MyClass(a, b);
     }
-
-    for(int i = 0; i < 10; i++){
-        int y = 5;
-        i + y;
+    public static void finishIndentation(){
+        --indentation;
+        System.out.println(getStringIndentation() + "}");
+        ctx.expression().size();
     }
-
-    do {
-       int y = 5;
-    } while (i < 10);
-
-
-    if(a > 5){
-        x = 5;
-        int y = 5;
-    }
-    else if (a > 10){
-        x = 10;
-        int y = 5;
-    }
-    else{
-        x = 0;
-        int y = 5;
-    }
-
-
-
-  }
 }

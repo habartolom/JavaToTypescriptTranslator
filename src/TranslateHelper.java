@@ -238,6 +238,8 @@ public class TranslateHelper {
     }
 
     public static String getTypeScriptBlock(JavaGrammarParser.BlockContext ctx){
+
+
         String block = "";
         for(int i = 0; i < ctx.blockStatement().size(); i++){
             block += getTypeScriptBlockStatement(ctx.blockStatement(i));
@@ -250,8 +252,9 @@ public class TranslateHelper {
 
         if(ctx.localVariableDeclaration() != null)
             blockStatement += getTypeScriptLocalVariableDeclaration(ctx.localVariableDeclaration());
-        else if(ctx.statement() != null)
+        else if(ctx.statement() != null){
             blockStatement += getTypeScriptStatement(ctx.statement());
+        }
 
         return blockStatement;
     }
@@ -341,7 +344,13 @@ public class TranslateHelper {
         }
 
         else if(ctx.statementExpression != null){
-            statement += getTypeScriptExpression(ctx.statementExpression) + ";";
+            if(ctx.statementExpression.getText().contains("System.out.println")){
+                statement += "console.log(";
+                statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList());
+                statement += ");";
+            }
+            else
+                statement += getTypeScriptExpression(ctx.statementExpression) + ";";
         }
 
         return statement + "\n";
@@ -388,15 +397,30 @@ public class TranslateHelper {
 
         if(ctx.bop != null){
             expression += getTypeScriptExpression(ctx.expression(0));
-            expression += " " + ctx.bop.getText() + " ";
-            expression += getTypeScriptExpression(ctx.expression(1));
+
+            if(ctx.expression().size() > 1){
+                expression += " " + ctx.bop.getText() + " ";
+                expression += getTypeScriptExpression(ctx.expression(1));
+            }
         }
 
+        if(ctx.methodCall() != null){
+            expression += getTypeScriptMethodCall(ctx.methodCall());
+        }
 
+        if(ctx.prefix != null){
+            expression += ctx.prefix.getText();
+            expression += getTypeScriptExpression(ctx.expression(0));
+        }
 
         if(ctx.postfix != null){
             expression += getTypeScriptExpression(ctx.expression(0));
             expression += ctx.postfix.getText();
+        }
+
+        if(ctx.NEW() != null){
+            expression += ctx.NEW().getText() + " ";
+            expression += getTypeScriptCreator(ctx.creator());
         }
 
         return expression;
@@ -414,17 +438,63 @@ public class TranslateHelper {
         return primary;
     }
 
+    public static String getTypeScriptMethodCall(JavaGrammarParser.MethodCallContext ctx){
+        String methodCall = "";
+
+        methodCall += getTypeScriptIdentifier(ctx.identifier());
+        methodCall += "(";
+
+        if(ctx.expressionList() != null)
+            methodCall += getTypeScriptExpressionList(ctx.expressionList());
+
+        methodCall += ")";
+
+        return methodCall;
+    }
+
     public static String getTypeScriptLiteral(JavaGrammarParser.LiteralContext ctx){
         String literal = "";
-
-        if(ctx.integerLiteral() != null){
-
-        }
-
         literal += ctx.getText();
 
         return literal;
     }
+
+    public static String getTypeScriptCreator(JavaGrammarParser.CreatorContext ctx){
+        String creator = "";
+
+        creator += getTypeScriptCreatedName(ctx.createdName());
+
+        if(ctx.classCreatorRest() != null)
+            creator += getTypeScriptClassCreatorRest(ctx.classCreatorRest());
+
+        return creator;
+    }
+
+    public static String getTypeScriptCreatedName(JavaGrammarParser.CreatedNameContext ctx){
+        String createdName = "";
+
+        if(!ctx.identifier().isEmpty())
+            createdName += getTypeScriptIdentifier(ctx.identifier(0));
+
+        return createdName;
+    }
+
+    public static String getTypeScriptClassCreatorRest(JavaGrammarParser.ClassCreatorRestContext ctx){
+        String classCreatorRest = "";
+
+        classCreatorRest += getTypeScriptArguments(ctx.arguments());
+
+        return classCreatorRest;
+    }
+
+    public static String getTypeScriptArguments(JavaGrammarParser.ArgumentsContext ctx){
+        String arguments = "(";
+        arguments += getTypeScriptExpressionList(ctx.expressionList());
+        arguments += ")";
+
+        return arguments;
+    }
+
 
     public static String getTypeScriptForControl(JavaGrammarParser.ForControlContext ctx){
         String forControl = "";
