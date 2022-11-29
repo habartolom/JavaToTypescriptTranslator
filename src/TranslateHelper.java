@@ -625,7 +625,6 @@ public class TranslateHelper {
 
     public static String getTypeScriptCatchClause(JavaGrammarParser.CatchClauseContext ctx){
         String catchClause = getStringIndentation();
-        catchClause += ctx.CATCH().getText() + "(" +ctx.catchType().getText() +" "+ ctx.identifier().getText()+")";
         catchClause += ctx.CATCH().getText() + "(" +ctx.identifier().getText() +":"+ctx.catchType().getText()+")";
         catchClause += getTypeScriptBlock(ctx.block()).trim() + "\n";
         return catchClause;
