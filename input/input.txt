@@ -10,5 +10,9 @@ public class Main {
     String[] arrayString = new String[] {"one", "two", "three", "four", "five"};
     MyClass nombre_array[];
     nombre_array = new MyClass[PerMax];
+    int[][] twoD_arr = new int[3][2];
+    int[][][] threeD_arr = new int[2][3][];
+    int[][] arr1 = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+    int[][] arr2 = new int[][] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
   }
 }

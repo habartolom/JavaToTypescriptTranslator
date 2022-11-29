@@ -526,6 +526,27 @@ public class TranslateHelper {
             arrayCreatorRest += ")";
         }
 
+        if(ctx.expression().size() > 1){
+            boolean allDimensionsAreDefined = ctx.expression().size() == ctx.LBRACK().size()
+                    && ctx.expression().stream().allMatch(x -> x.primary() != null
+                        && x.primary().literal() != null
+                        && x.primary().literal().integerLiteral() != null
+                        && x.primary().literal().integerLiteral().DECIMAL_LITERAL() != null);
+
+            if(allDimensionsAreDefined){
+                int dimensions = ctx.expression().size();
+                arrayCreatorRest += "new Array(" + Integer.parseInt(ctx.expression(dimensions - 1).getText()) + ")";
+
+                for(int i = dimensions - 2; i >= 0; i--){
+                    arrayCreatorRest = String.join(", ", Collections.nCopies(Integer.parseInt(ctx.expression(i).getText()), arrayCreatorRest));
+                    arrayCreatorRest = "[" + arrayCreatorRest + "]";
+                }
+            }
+            else{
+                arrayCreatorRest = "[]";
+            }
+        }
+
         return arrayCreatorRest;
     }
 
