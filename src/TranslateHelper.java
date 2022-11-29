@@ -345,8 +345,10 @@ public class TranslateHelper {
             statement += getTypeScriptTryComplement(ctx.tryComplement()).trim();
         }
 
+
+
         else if(ctx.statementExpression != null){
-            if(ctx.statementExpression.getText().contains("System.out.println")){
+            if(ctx.statementExpression.getText().contains("System.out.println") || ctx.statementExpression.getText().contains("System.out.print") || ctx.statementExpression.getText().contains("System.out.printf")){
                 statement += "console.log(";
                 statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList());
                 statement += ");";
@@ -356,6 +358,7 @@ public class TranslateHelper {
         }
 
         return statement + "\n";
+        //return statement;
     }
 
     public static String getTypeScriptBracketsVariableDeclaratorId(JavaGrammarParser.VariableDeclaratorIdContext ctx){
@@ -594,8 +597,10 @@ public class TranslateHelper {
         }
 
         if(ctx.catchClause() != null){
-            for(int i = 0; i < ctx.catchClause().size(); i++)
+            for(int i = 0; i < ctx.catchClause().size(); i++){
+                //System.out.println("line 577: "+getTypeScriptCatchClause(ctx.catchClause(i)));
                 tryComplement += getTypeScriptCatchClause(ctx.catchClause(i));
+            }
         }
 
         if(ctx.finallyBlock() != null)
@@ -606,8 +611,11 @@ public class TranslateHelper {
 
     public static String getTypeScriptCatchClause(JavaGrammarParser.CatchClauseContext ctx){
         String catchClause = getStringIndentation();
-        catchClause += "catch (";
-        catchClause += ") ";
+        //catchClause += "catch (";
+        //catchClause += ") ";
+        //System.out.println("line593: "+ctx.identifier().getText());
+        catchClause += ctx.CATCH().getText() + "(" +ctx.catchType().getText() +" "+ ctx.identifier().getText()+")";
+        //System.out.println("line 595:" + catchClause);
         catchClause += getTypeScriptBlock(ctx.block()).trim() + "\n";
         return catchClause;
     }

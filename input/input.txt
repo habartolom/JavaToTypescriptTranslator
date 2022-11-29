@@ -14,5 +14,14 @@ public class Main {
     int[][][] threeD_arr = new int[2][3][];
     int[][] arr1 = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
     int[][] arr2 = new int[][] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+
+    try {
+      int day = 4;
+      int week = 10;
+    } catch (Exception e) {
+      System.out.print("Something went wrong.");
+    } finally {
+      System.out.printlln("The 'try catch' is finished.");
+    }
   }
 }
