@@ -274,7 +274,7 @@ public class TranslateHelper {
             variableDeclaration += getTypeScriptBracketsVariableDeclaratorId(ctx.variableDeclarators().variableDeclarator(i).variableDeclaratorId());
 
             if(ctx.variableDeclarators().variableDeclarator(i).variableInitializer() != null)
-                variableDeclaration += getTypeScriptVariableInitializer(ctx.variableDeclarators().variableDeclarator(i).variableInitializer());
+                variableDeclaration += " = " + getTypeScriptVariableInitializer(ctx.variableDeclarators().variableDeclarator(i).variableInitializer());
 
             localVariableDeclaration += variableDeclaration + ", ";
         }
@@ -371,13 +371,28 @@ public class TranslateHelper {
     }
 
     public static String getTypeScriptVariableInitializer(JavaGrammarParser.VariableInitializerContext ctx){
-        String variableInitializer = " = ";
+        String variableInitializer = "";
 
         if(ctx.expression() != null)
             variableInitializer += getTypeScriptExpression(ctx.expression());
 
+        if(ctx.arrayInitializer() != null)
+            variableInitializer += getTypeScriptArrayInitializer(ctx.arrayInitializer());
 
         return  variableInitializer;
+    }
+
+    public static String getTypeScriptArrayInitializer(JavaGrammarParser.ArrayInitializerContext ctx){
+        String arrayInitializer = "[";
+
+        String variableInitializer = "";
+        for(int i = 0; i < ctx.variableInitializer().size(); i++){
+            variableInitializer += getTypeScriptVariableInitializer(ctx.variableInitializer(i)) + ", ";
+        }
+
+        arrayInitializer += variableInitializer.substring(0, variableInitializer.length() - 2);
+        arrayInitializer += "]";
+        return arrayInitializer;
     }
 
     public static String getTypeScriptExpressionList(JavaGrammarParser.ExpressionListContext ctx){
@@ -406,6 +421,13 @@ public class TranslateHelper {
             }
         }
 
+        if(ctx.LBRACK() != null){
+            expression += getTypeScriptExpression(ctx.expression(0));
+            expression += "[";
+            expression += getTypeScriptExpression(ctx.expression(1));
+            expression += "]";
+        }
+
         if(ctx.methodCall() != null){
             expression += getTypeScriptMethodCall(ctx.methodCall());
         }
@@ -421,7 +443,6 @@ public class TranslateHelper {
         }
 
         if(ctx.NEW() != null){
-            expression += ctx.NEW().getText() + " ";
             expression += getTypeScriptCreator(ctx.creator());
         }
 
@@ -464,10 +485,14 @@ public class TranslateHelper {
     public static String getTypeScriptCreator(JavaGrammarParser.CreatorContext ctx){
         String creator = "";
 
-        creator += getTypeScriptCreatedName(ctx.createdName());
-
-        if(ctx.classCreatorRest() != null)
+        if(ctx.classCreatorRest() != null){
+            creator += "new ";
+            creator += getTypeScriptCreatedName(ctx.createdName());
             creator += getTypeScriptClassCreatorRest(ctx.classCreatorRest());
+        }
+
+        if(ctx.arrayCreatorRest() != null)
+            creator += getTypeScriptArrayCreatorRest(ctx.arrayCreatorRest());
 
         return creator;
     }
@@ -487,6 +512,21 @@ public class TranslateHelper {
         classCreatorRest += getTypeScriptArguments(ctx.arguments());
 
         return classCreatorRest;
+    }
+
+    public static String getTypeScriptArrayCreatorRest(JavaGrammarParser.ArrayCreatorRestContext ctx){
+        String arrayCreatorRest = "";
+
+        if(ctx.arrayInitializer() != null)
+            arrayCreatorRest += getTypeScriptArrayInitializer(ctx.arrayInitializer());
+
+        if(ctx.expression().size() == 1){
+            arrayCreatorRest += "new Array(";
+            arrayCreatorRest += getTypeScriptExpression(ctx.expression(0));
+            arrayCreatorRest += ")";
+        }
+
+        return arrayCreatorRest;
     }
 
     public static String getTypeScriptArguments(JavaGrammarParser.ArgumentsContext ctx){

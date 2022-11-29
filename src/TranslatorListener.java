@@ -21,7 +21,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
             classBodyDeclaration += TranslateHelper.getTypeScriptMemberDeclaration(ctx.memberDeclaration());
         }
 
-        System.out.println(classBodyDeclaration);
+        System.out.print(classBodyDeclaration);
     }
 
     @Override

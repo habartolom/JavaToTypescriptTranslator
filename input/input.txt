@@ -1,12 +1,14 @@
 public class Main {
   public static void main(String[] args) {
-    try {
-      int[] myNumbers = {1, 2, 3};
-      System.out.println(myNumbers[10]);
-    } catch (Exception e) {
-      System.out.println("Something went wrong.");
-    } finally {
-      System.out.println("The 'try catch' is finished.");
-    }
+    int[] x = new int[] {1, 2, 3, 4, 5};
+    MyClass myClass = new MyClass(1, 2, x[5]);
+    String a[] = {"Avila","Burgos","León","Palencia","Salamanca", "Segovia","Soria","Valladolid","Zamora"};
+    a[0] = "Avila";
+    int PerMax = 5;
+    int [] cupo= new int [PerMax];
+    int[] arrayInt = new int[10];
+    String[] arrayString = new String[] {"one", "two", "three", "four", "five"};
+    MyClass nombre_array[];
+    nombre_array = new MyClass[PerMax];
   }
 }
