@@ -1,4 +1,4 @@
-// Generated from C:/Users/kryuk/Documents/JavaToTypescript/grammar\JavaGrammar.g4 by ANTLR 4.10.1
+// Generated from C:/Users/Andr�s/Downloads/ProyectoLP_v3/JavaToTypescriptTranslator/grammar\JavaGrammar.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

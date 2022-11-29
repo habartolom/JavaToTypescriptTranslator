@@ -467,7 +467,6 @@ grammar JavaGrammar;
         | YIELD expression ';' // Java17
         | SEMI
         | statementExpression=expression ';'
-        | switchExpression ';'? // Java17
         | identifierLabel=identifier ':' statement
         ;
 

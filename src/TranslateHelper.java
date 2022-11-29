@@ -289,6 +289,8 @@ public class TranslateHelper {
             statement += getTypeScriptBlock(ctx.block());
         }
 
+
+
         else if (ctx.ASSERT() != null) {
             statement += "assert" + "(" + getTypeScriptExpression(ctx.expression(0));
             if(ctx.expression().size() > 1)
@@ -343,6 +345,22 @@ public class TranslateHelper {
         else if (ctx.TRY() != null){
             statement += "try ";
             statement += getTypeScriptTryComplement(ctx.tryComplement()).trim();
+        }
+
+        else if(ctx.SWITCH() != null){
+            statement += ctx.SWITCH().getText() + ctx.parExpression().getText();
+            statement +="{";
+
+            for(int i=0; i<ctx.switchBlockStatementGroup().size(); i++){
+                if(ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).getText().equals("default:"))
+                    statement += "\n "+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "))+"default ";
+                else
+                    statement += "\n "+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "))+"case "+ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).constantExpression.getText();
+                statement += ":";
+                for(int j=0; j<ctx.switchBlockStatementGroup().get(i).blockStatement().size();j++)
+                    statement += "\n"+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, "   "))+ctx.switchBlockStatementGroup().get(i).blockStatement().get(j).getText();
+            }
+            statement += "\n"+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "))+"}";
         }
 
         else if(ctx.statementExpression != null){
@@ -608,6 +626,7 @@ public class TranslateHelper {
     public static String getTypeScriptCatchClause(JavaGrammarParser.CatchClauseContext ctx){
         String catchClause = getStringIndentation();
         catchClause += ctx.CATCH().getText() + "(" +ctx.catchType().getText() +" "+ ctx.identifier().getText()+")";
+        catchClause += ctx.CATCH().getText() + "(" +ctx.identifier().getText() +":"+ctx.catchType().getText()+")";
         catchClause += getTypeScriptBlock(ctx.block()).trim() + "\n";
         return catchClause;
     }
