@@ -25,7 +25,11 @@ public class TranslateHelper {
 
         if(!ctx.classOrInterfaceModifier().isEmpty()){
             for (int i = 0; i < ctx.classOrInterfaceModifier().size(); i++) {
-                if (ctx.classOrInterfaceModifier(i).ABSTRACT() != null)
+
+                if (ctx.classDeclaration() != null && ctx.classOrInterfaceModifier(i).ABSTRACT() != null)
+                    typeDeclaration += getTypeScriptClassOrInterfaceModifier(ctx.classOrInterfaceModifier(i)) + " ";
+
+                if (ctx.enumDeclaration() != null && ctx.classOrInterfaceModifier(i).PUBLIC() != null)
                     typeDeclaration += getTypeScriptClassOrInterfaceModifier(ctx.classOrInterfaceModifier(i)) + " ";
             }
         }
@@ -88,8 +92,23 @@ public class TranslateHelper {
     }
 
     public static String getTypeScriptEnumDeclaration(JavaGrammarParser.EnumDeclarationContext ctx){
-        String enumDeclaration = "";
+        String enumDeclaration = "enum ";
+        enumDeclaration += ctx.identifier().getText() + " {\n";
+        if(ctx.enumConstants() != null){
+            indentation++;
+            enumDeclaration += getTypeScriptEnumConstants(ctx.enumConstants());
+            indentation--;
+        }
+        enumDeclaration += getStringIndentation() + "}\n";
         return enumDeclaration;
+    }
+
+    public static String getTypeScriptEnumConstants(JavaGrammarParser.EnumConstantsContext ctx){
+        String enumConstants = "";
+        for (int i = 0; i < ctx.enumConstant().size(); i++) {
+            enumConstants += getStringIndentation() + getTypeScriptIdentifier(ctx.enumConstant(i).identifier()) + ",\n";
+        }
+        return enumConstants;
     }
 
     public static String getTypescriptModifier(JavaGrammarParser.ModifierContext ctx){
