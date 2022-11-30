@@ -52,7 +52,7 @@ public class Ejemplos {
     }
 
     public static void ciclos(){
-
+        int numero = 200;
         while(numero <= 500)
         {
             System.out.println("Ingrese un numero ");
@@ -60,14 +60,20 @@ public class Ejemplos {
         }
 
         for(int i = 0; i <= 10000; i++)
+        {
+            if(i % 20 == 0)
             {
-                if(i % 20 == 0)
-                {
-                    contador++;
-                    ++contador;
-                }
-
+                contador++;
+                ++contador;
             }
+
+        }
+
+        int i=1;
+        do{
+            System.out.println(i);
+            i++;
+        }while(i<=10);
 
     }
 
