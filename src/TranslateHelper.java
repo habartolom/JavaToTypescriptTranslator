@@ -450,10 +450,16 @@ public class TranslateHelper {
         if(ctx.primary() != null)
             expression += getTypeScriptPrimary(ctx.primary());
 
-        if(ctx.bop != null){
+        else if(ctx.bop != null){
             //System.out.println(ctx.bop.getText());
             if (ctx.bop.getText().equals(".")){
                 expression += getTypeScriptExpression(ctx.expression(0))+".";
+                if(ctx.methodCall() != null)
+                    expression += getTypeScriptMethodCall(ctx.methodCall());
+                else if(ctx.identifier() != null)
+                    expression += getTypeScriptIdentifier(ctx.identifier());
+                else if(ctx.THIS() != null)
+                    expression += ctx.THIS().getText();
             }else{
                 expression += getTypeScriptExpression(ctx.expression(0));
 
@@ -464,28 +470,28 @@ public class TranslateHelper {
             }
         }
 
-        if(ctx.LBRACK() != null){
+        else if(ctx.LBRACK() != null){
             expression += getTypeScriptExpression(ctx.expression(0));
             expression += "[";
             expression += getTypeScriptExpression(ctx.expression(1));
             expression += "]";
         }
 
-        if(ctx.methodCall() != null){
+        else if(ctx.methodCall() != null){
             expression += getTypeScriptMethodCall(ctx.methodCall());
         }
 
-        if(ctx.prefix != null){
+        else if(ctx.prefix != null){
             expression += ctx.prefix.getText();
             expression += getTypeScriptExpression(ctx.expression(0));
         }
 
-        if(ctx.postfix != null){
+        else if(ctx.postfix != null){
             expression += getTypeScriptExpression(ctx.expression(0));
             expression += ctx.postfix.getText();
         }
 
-        if(ctx.NEW() != null){
+        else if(ctx.NEW() != null){
             expression += getTypeScriptCreator(ctx.creator());
         }
 
