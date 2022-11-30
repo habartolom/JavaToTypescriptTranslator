@@ -639,8 +639,16 @@ public class TranslateHelper {
     public static String getTypeScriptMethodCall(JavaGrammarParser.MethodCallContext ctx){
         String methodCall = "";
 
-        methodCall += getTypeScriptIdentifier(ctx.identifier());
-        methodCall += "(";
+        if(ctx.identifier() != null) {
+            methodCall += getTypeScriptIdentifier(ctx.identifier());
+            methodCall += "(";
+        }else if(ctx.SUPER() != null){
+            methodCall += ctx.SUPER().getText();
+            methodCall += "(";
+        } else if (ctx.THIS() != null) {
+            methodCall += ctx.THIS().getText();
+            methodCall += "(";
+        }
 
         if(ctx.expressionList() != null)
             methodCall += getTypeScriptExpressionList(ctx.expressionList());
