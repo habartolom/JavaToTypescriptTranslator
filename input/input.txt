@@ -1,5 +1,11 @@
-package com.arquitecturajava;
-public interface BecableContratable extends Contratable, Becable {
-
+public class Complejo {
+    private double real;
+    private double imag;
+    //Constructor con parámetros
+    public Complejo(double real, double imag) {
+        this.real = real;
+        this.imag = imag;
+        super();
+    }
 
 }
