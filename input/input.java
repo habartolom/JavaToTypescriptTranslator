@@ -1,6 +1,38 @@
-interface Animal {
-    public void animalSound(); // interface method (does not have a body)
-    public void run(); // interface method (does not have a body)
+interface FirstInterface {
+    public void myMethod(); // interface method
+}
+
+interface SecondInterface {
+    public void myOtherMethod(); // interface method
+}
+
+class DemoClass implements FirstInterface, SecondInterface {
+    public void myMethod() {
+        System.out.println("Some text..");
+    }
+    public void myOtherMethod() {
+        System.out.println("Some other text...");
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        DemoClass myObj = new DemoClass();
+        myObj.myMethod();
+        myObj.myOtherMethod();
+    }
+}
+
+public class Complejo {
+    private double real;
+    private double imag;
+
+    //Constructor con parámetros
+    public Complejo(double real, double imag) {
+        this.real = real;
+        this.imag = imag;
+        super(real,r2);
+    }
 }
 
 
@@ -17,6 +49,32 @@ public class Ejemplos {
     public static String metodoConReturn(String texto) {
         texto = "mensaje de prueba";
         return texto;
+    }
+
+    public static void ciclos(){
+        int numero = 200;
+        while(numero <= 500)
+        {
+            System.out.println("Ingrese un numero ");
+            numero = sc.nextInt();
+        }
+
+        for(int i = 0; i <= 10000; i++)
+        {
+            if(i % 20 == 0)
+            {
+                contador++;
+                ++contador;
+            }
+
+        }
+
+        int i=1;
+        do{
+            System.out.println(i);
+            i++;
+        }while(i<=10);
+
     }
 
     public static void metodoDeclaracionesBasicas() {

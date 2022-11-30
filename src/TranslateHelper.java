@@ -626,6 +626,9 @@ public class TranslateHelper {
         if(ctx.THIS() != null)
             primary += ctx.THIS().getText();
 
+        if(ctx.SUPER() != null)
+            primary += ctx.SUPER().getText();
+
         return primary;
     }
 
