@@ -27,7 +27,7 @@ public class Main {
         int day = 4;
         switch (day) {
             case 6:
-                day = "3";
+                System.out.println("Today is Saturday");
                 System.out.println("and second line");
                 break;
             case 7:
@@ -36,5 +36,8 @@ public class Main {
             default:
                 System.out.println("Looking forward to the Weekend");
         }
+
+
+
     }
 }

@@ -352,19 +352,35 @@ public class TranslateHelper {
             statement +="{";
 
             for(int i=0; i<ctx.switchBlockStatementGroup().size(); i++){
-                if(ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).getText().equals("default:"))
-                    statement += "\n "+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "))+"default ";
+                if(ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).getText().equals("default:")){
+                    statement += "\n  "+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "));
+                    statement += "default";
+                }
                 else
-                    statement += "\n "+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "))+"case "+ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).constantExpression.getText();
-                statement += ":";
-                for(int j=0; j<ctx.switchBlockStatementGroup().get(i).blockStatement().size();j++)
-                    statement += "\n"+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, "   "))+ctx.switchBlockStatementGroup().get(i).blockStatement().get(j).getText();
+                    statement += "\n  "+getStringIndentation()+"case "+ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).constantExpression.getText();
+
+                for(int j=0; j<ctx.switchBlockStatementGroup().get(i).blockStatement().size();j++){
+                    if(ctx.switchBlockStatementGroup().get(i).blockStatement().get(j).getText().contains("System.")){
+                        statement += "\n"+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, "  "));
+                        statement += "console.log(";
+                        statement += getTypeScriptExpressionList(ctx.switchBlockStatementGroup().get(i).blockStatement().get(j).statement().statementExpression.methodCall().expressionList());
+                        statement += ");";
+                    }
+                    else{
+                        statement += "\n"+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "));
+                        statement += getStringIndentation()+ctx.switchBlockStatementGroup().get(i).blockStatement().get(j).getText();
+                    }
+                }
             }
+
             statement += "\n"+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "))+"}";
+
+
         }
 
         else if(ctx.statementExpression != null){
-            if(ctx.statementExpression.getText().contains("System.out.println") || ctx.statementExpression.getText().contains("System.out.print") || ctx.statementExpression.getText().contains("System.out.printf")){
+            if(ctx.statementExpression.getText().contains("System.out.println") || ctx.statementExpression.getText().contains("System.out.print")
+                    || ctx.statementExpression.getText().contains("System.out.printf") ||ctx.statementExpression.getText().contains("System.err.println")){
                 statement += "console.log(";
                 statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList());
                 statement += ");";
@@ -625,7 +641,7 @@ public class TranslateHelper {
 
     public static String getTypeScriptCatchClause(JavaGrammarParser.CatchClauseContext ctx){
         String catchClause = getStringIndentation();
-        catchClause += ctx.CATCH().getText() + "(" +ctx.identifier().getText() +":"+ctx.catchType().getText()+")";
+        catchClause += ctx.CATCH().getText() + "(" +ctx.identifier().getText() /*+":"+ctx.catchType().getText()*/+")";
         catchClause += getTypeScriptBlock(ctx.block()).trim() + "\n";
         return catchClause;
     }
@@ -636,4 +652,5 @@ public class TranslateHelper {
         finallyBlock += getTypeScriptBlock(ctx.block()).trim() + "\n";
         return finallyBlock;
     }
+
 }
