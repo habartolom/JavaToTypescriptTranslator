@@ -29,8 +29,6 @@ public class TranslateHelper {
                 if (ctx.classDeclaration() != null && ctx.classOrInterfaceModifier(i).ABSTRACT() != null)
                     typeDeclaration += getTypeScriptClassOrInterfaceModifier(ctx.classOrInterfaceModifier(i)) + " ";
 
-                if (ctx.enumDeclaration() != null && ctx.classOrInterfaceModifier(i).PUBLIC() != null)
-                    typeDeclaration += getTypeScriptClassOrInterfaceModifier(ctx.classOrInterfaceModifier(i)) + " ";
             }
         }
 
