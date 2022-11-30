@@ -283,13 +283,13 @@ public class TranslateHelper {
     }
 
     public static String getTypeScriptStatement(JavaGrammarParser.StatementContext ctx){
+        //String statement = String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, "  "));
         String statement = getStringIndentation();
 
+
         if (ctx.block() != null){
-            statement += getTypeScriptBlock(ctx.block());
+            statement += getTypeScriptBlock(ctx.block()).trim();
         }
-
-
 
         else if (ctx.ASSERT() != null) {
             statement += "assert" + "(" + getTypeScriptExpression(ctx.expression(0));
@@ -354,10 +354,10 @@ public class TranslateHelper {
             for(int i=0; i<ctx.switchBlockStatementGroup().size(); i++){
                 if(ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).getText().equals("default:")){
                     statement += "\n  "+String.join("", Collections.nCopies(TranslateHelper.indentation * TranslateHelper.spaces, " "));
-                    statement += "default";
+                    statement += "default:";
                 }
                 else
-                    statement += "\n  "+getStringIndentation()+"case "+ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).constantExpression.getText();
+                    statement += "\n  "+getStringIndentation()+"case "+ctx.switchBlockStatementGroup().get(i).switchLabel().get(0).constantExpression.getText()+":";
 
                 for(int j=0; j<ctx.switchBlockStatementGroup().get(i).blockStatement().size();j++){
                     if(ctx.switchBlockStatementGroup().get(i).blockStatement().get(j).getText().contains("System.")){
@@ -379,10 +379,17 @@ public class TranslateHelper {
         }
 
         else if(ctx.statementExpression != null){
-            if(ctx.statementExpression.getText().contains("System.out.println") || ctx.statementExpression.getText().contains("System.out.print")
-                    || ctx.statementExpression.getText().contains("System.out.printf") ||ctx.statementExpression.getText().contains("System.err.println")){
+            if(ctx.statementExpression.getText().contains("System.out.println") ||ctx.statementExpression.getText().contains("System.err.println")){
                 statement += "console.log(";
-                statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList());
+                if(ctx.statementExpression.methodCall().expressionList() != null)
+                    statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList()) +"\n";
+                statement += ");";
+
+            }
+            else if(ctx.statementExpression.getText().contains("System.out.print")){
+                statement += "console.log(";
+                if(ctx.statementExpression.methodCall().expressionList() != null)
+                    statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList());
                 statement += ");";
             }
             else
@@ -488,6 +495,9 @@ public class TranslateHelper {
 
         if(ctx.identifier() != null)
             primary += getTypeScriptIdentifier(ctx.identifier());
+
+        if(ctx.expression() != null)
+            primary += "("+getTypeScriptExpression(ctx.expression())+")";
 
         if(ctx.literal() != null)
             primary += getTypeScriptLiteral(ctx.literal());

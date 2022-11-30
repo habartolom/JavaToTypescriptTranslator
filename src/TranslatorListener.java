@@ -22,6 +22,7 @@ public class TranslatorListener extends JavaGrammarBaseListener {
         }
 
         System.out.print(classBodyDeclaration);
+
     }
 
     @Override
