@@ -1,8 +1,15 @@
-public class Main {
-    public static int example1, example2, example3 = 5;
-    public static String[] example4, example5, example6 = new String[5];
-    public static String[][] example7, example8, example9;
-    public static void main(String[] args) {
-        int a, b, c = 0;
+public class Complejo {
+    private double real;
+    private double imag;
+
+    //Constructor por defecto de la clase
+    public Complejo() {
+
     }
+    //Constructor con parámetros
+    public Complejo(double real, double imag) {
+        this.real = real;
+        this.imag = imag;
+    }
+
 }

@@ -139,6 +139,17 @@ public class TranslateHelper {
             }
         }
 
+        if(ctx.constructorDeclaration() != null){
+            memberDeclaration += getTypeScripConstructorDeclaration(ctx.constructorDeclaration());
+        }
+
+        return memberDeclaration;
+    }
+
+    public static String getTypeScripConstructorDeclaration(JavaGrammarParser.ConstructorDeclarationContext ctx){
+        String memberDeclaration = getTypeScriptIdentifier(ctx.identifier())+" "
+                +getTypeScriptFormalParameters(ctx.formalParameters())+" "
+                +getTypeScriptBlock(ctx.block());
         return memberDeclaration;
     }
 
@@ -563,6 +574,9 @@ public class TranslateHelper {
 
         if(ctx.literal() != null)
             primary += getTypeScriptLiteral(ctx.literal());
+
+        if(ctx.THIS() != null)
+            primary += ctx.THIS().getText();
 
         return primary;
     }
