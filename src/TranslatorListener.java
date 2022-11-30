@@ -13,12 +13,14 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     @Override public void enterClassBodyDeclaration(JavaGrammarParser.ClassBodyDeclarationContext ctx) {
         String classBodyDeclaration = TranslateHelper.getStringIndentation();
 
-        if(ctx.modifier().size() > 0){
-            classBodyDeclaration += TranslateHelper.getTypescriptModifier(ctx.modifier().get(0)) + " ";
+        String modifiers = "";
+        if(!ctx.modifier().isEmpty()){
+            for(int i = 0; i < ctx.modifier().size(); i++)
+                modifiers += TranslateHelper.getTypescriptModifier(ctx.modifier().get(i)) + " ";
         }
 
         if(ctx.memberDeclaration() != null){
-            classBodyDeclaration += TranslateHelper.getTypeScriptMemberDeclaration(ctx.memberDeclaration());
+            classBodyDeclaration += TranslateHelper.getTypeScriptMemberDeclaration(ctx.memberDeclaration(), modifiers);
         }
 
         System.out.print(classBodyDeclaration);

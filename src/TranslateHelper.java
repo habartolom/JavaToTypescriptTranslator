@@ -107,14 +107,26 @@ public class TranslateHelper {
         else if(ctx.PRIVATE() != null)
             typeScriptModifier = ctx.PRIVATE().getText();
 
+        else if(ctx.STATIC() != null)
+            typeScriptModifier = ctx.STATIC().getText();
+
         return typeScriptModifier;
     }
 
-    public static String getTypeScriptMemberDeclaration(JavaGrammarParser.MemberDeclarationContext ctx){
+    public static String getTypeScriptMemberDeclaration(JavaGrammarParser.MemberDeclarationContext ctx, String modifiers){
         String memberDeclaration = "";
 
         if(ctx.methodDeclaration() != null)
-            memberDeclaration = getTypeScriptMethodDeclaration(ctx.methodDeclaration());
+            memberDeclaration = modifiers + getTypeScriptMethodDeclaration(ctx.methodDeclaration());
+
+        if(ctx.fieldDeclaration() != null){
+            String[] fieldsDeclaration = getTypeScriptFieldDeclaration(ctx.fieldDeclaration()).split(",");
+
+            memberDeclaration += modifiers + fieldsDeclaration[0] + ";\n";
+            for (int i = 1; i < fieldsDeclaration.length; i++) {
+                memberDeclaration += getStringIndentation() + modifiers + fieldsDeclaration[i] + ";\n";
+            }
+        }
 
         return memberDeclaration;
     }
@@ -128,6 +140,37 @@ public class TranslateHelper {
         methodDeclaration += getTypeScriptMethodBody(ctx.methodBody());
 
         return methodDeclaration;
+    }
+
+    public static String getTypeScriptFieldDeclaration(JavaGrammarParser.FieldDeclarationContext ctx){
+
+        String typeType = getTypeScriptTypeType(ctx.typeType());
+        String variableDeclarators = getTypeScriptVariableDeclarators(ctx.variableDeclarators());
+        String fieldDeclaration = variableDeclarators.replace(":", ": " + typeType);
+
+        return fieldDeclaration;
+    }
+
+    public static String getTypeScriptVariableDeclarators(JavaGrammarParser.VariableDeclaratorsContext ctx){
+
+        String[] variableDeclaratorsArray = new String[ctx.variableDeclarator().size()];
+        for (int i = 0; i < ctx.variableDeclarator().size(); i++) {
+            variableDeclaratorsArray[i] = getTypeScriptVariableDeclarator(ctx.variableDeclarator(i));
+        }
+
+        String variableDeclarators = String.join(",", variableDeclaratorsArray);
+        return variableDeclarators;
+    }
+
+    public static String getTypeScriptVariableDeclarator(JavaGrammarParser.VariableDeclaratorContext ctx){
+        String variableDeclarator = "";
+        variableDeclarator += getTypeScriptIdentifier(ctx.variableDeclaratorId().identifier()) + " :";
+        variableDeclarator += getTypeScriptBracketsVariableDeclaratorId(ctx.variableDeclaratorId());
+
+        if( ctx.variableInitializer() != null )
+            variableDeclarator += " = " + getTypeScriptVariableInitializer(ctx.variableInitializer());
+
+        return variableDeclarator;
     }
 
     public static String getTypeScriptTypeTypeOrVoid(JavaGrammarParser.TypeTypeOrVoidContext ctx){
