@@ -1,4 +1,4 @@
- public class Complejo {
+public class Complejo {
     private double real;
     private double imag;
 
