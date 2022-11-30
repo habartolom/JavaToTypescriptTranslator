@@ -1,7 +1,8 @@
-public class backlog {
-     public String toString() {
-        if (im == 0) {
-            System.out.printf("%d", 3);
-        }
+public class Main {
+    public static String getTypeScriptArrayInitializer(JavaGrammarParser.ArrayInitializerContext ctx){
+                (args.length()>0);
+            }
+    public static void main(String[] args) {
+
     }
 }

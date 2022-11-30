@@ -383,14 +383,7 @@ public class TranslateHelper {
         }
 
         else if(ctx.statementExpression != null){
-            if(ctx.statementExpression.getText().contains("System.out.println") ||ctx.statementExpression.getText().contains("System.err.println")){
-                statement += "console.log(";
-                if(ctx.statementExpression.methodCall().expressionList() != null)
-                    statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList()) +"\n";
-                statement += ");";
-
-            }
-            else if(ctx.statementExpression.getText().contains("System.out.print")){
+            if(ctx.statementExpression.getText().contains("System.out.println") || ctx.statementExpression.getText().contains("System.out.print") || ctx.statementExpression.getText().contains("System.err.println")){
                 statement += "console.log(";
                 if(ctx.statementExpression.methodCall().expressionList() != null)
                     statement += getTypeScriptExpressionList(ctx.statementExpression.methodCall().expressionList());
@@ -612,7 +605,8 @@ public class TranslateHelper {
 
     public static String getTypeScriptArguments(JavaGrammarParser.ArgumentsContext ctx){
         String arguments = "(";
-        arguments += getTypeScriptExpressionList(ctx.expressionList());
+        if(ctx.expressionList() !=null)
+            arguments += getTypeScriptExpressionList(ctx.expressionList());
         arguments += ")";
 
         return arguments;
