@@ -45,17 +45,17 @@ public class TranslatorListener extends JavaGrammarBaseListener {
     }
 
     @Override public void enterInterfaceBodyDeclaration(JavaGrammarParser.InterfaceBodyDeclarationContext ctx) {
-        String classBodyDeclaration = TranslateHelper.getStringIndentation();
+        String interfaceBodyDeclaration = TranslateHelper.getStringIndentation();
 
         if(!ctx.modifier().isEmpty()){
             for(int i = 0; i < ctx.modifier().size(); i++)
-                classBodyDeclaration += TranslateHelper.getTypescriptModifier(ctx.modifier().get(i)) + " ";
+                interfaceBodyDeclaration += TranslateHelper.getTypescriptModifier(ctx.modifier().get(i)) + " ";
         }
 
         if(ctx.interfaceMemberDeclaration() != null){
-            classBodyDeclaration += TranslateHelper.getTypeScriptInterfaceMemberDeclaration(ctx.interfaceMemberDeclaration());
+            interfaceBodyDeclaration += TranslateHelper.getTypeScriptInterfaceMemberDeclaration(ctx.interfaceMemberDeclaration());
         }
 
-        System.out.print(classBodyDeclaration);
+        System.out.print(interfaceBodyDeclaration);
     }
 }
