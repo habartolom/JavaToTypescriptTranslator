@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Hashtable;
 
 public class TranslateHelper {
     public static int indentation = 0;
@@ -145,7 +146,10 @@ public class TranslateHelper {
             typeType +=  getTypeScriptPrimitiveType(ctx.primitiveType());
 
         if(ctx.classOrInterfaceType() != null)
-            typeType += getTypeScriptClassOrInterfaceType(ctx.classOrInterfaceType());
+            if(ctx.classOrInterfaceType().getText().contains("."))
+                typeType += ctx.classOrInterfaceType().getText();
+            else
+                typeType += getTypeScriptClassOrInterfaceType(ctx.classOrInterfaceType());
 
         for(int i = 0; i < ctx.LBRACK().size(); i++)
             typeType += "[]";
@@ -431,11 +435,16 @@ public class TranslateHelper {
             expression += getTypeScriptPrimary(ctx.primary());
 
         if(ctx.bop != null){
-            expression += getTypeScriptExpression(ctx.expression(0));
+            //System.out.println(ctx.bop.getText());
+            if (ctx.bop.getText().equals(".")){
+                expression += getTypeScriptExpression(ctx.expression(0))+".";
+            }else{
+                expression += getTypeScriptExpression(ctx.expression(0));
 
-            if(ctx.expression().size() > 1){
-                expression += " " + ctx.bop.getText() + " ";
-                expression += getTypeScriptExpression(ctx.expression(1));
+                if (ctx.expression().size() > 1) {
+                    expression += " " + ctx.bop.getText() + " ";
+                    expression += getTypeScriptExpression(ctx.expression(1));
+                }
             }
         }
 
@@ -477,6 +486,13 @@ public class TranslateHelper {
             primary += getTypeScriptLiteral(ctx.literal());
 
         return primary;
+    }
+
+    static String getMethod(String m) {
+        Hashtable<String, String> methods = new Hashtable<String, String>();
+        //methods.put();
+
+        return methods.get(m);
     }
 
     public static String getTypeScriptMethodCall(JavaGrammarParser.MethodCallContext ctx){

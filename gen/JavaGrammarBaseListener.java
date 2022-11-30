@@ -1,4 +1,4 @@
-// Generated from C:/Users/Andrés/Downloads/ProyectoLP_v3/JavaToTypescriptTranslator/grammar\JavaGrammar.g4 by ANTLR 4.10.1
+// Generated from D:/mateo/GitHub/JavaToTypescriptTranslator/grammar\JavaGrammar.g4 by ANTLR 4.11.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
