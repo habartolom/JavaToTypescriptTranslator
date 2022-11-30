@@ -1,4 +1,8 @@
+class ejemplo1 {
+    private static int uno = 1;
+}
 public class Ejemplos {
+    private static int uno = 1;
 
     public static void metodoSinArgumentos() {
     }
@@ -34,7 +38,7 @@ public class Ejemplos {
         } else if (n == 1) {
             return 1;
         } else {
-            return fibonacciRecursivo(n - 1) + fibonacciRecursivo(n - 2);
+            return this.fibonacciRecursivo(n - 1) + this.fibonacciRecursivo(n - 2);
         }
     }
 

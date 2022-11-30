@@ -553,6 +553,9 @@ public class TranslateHelper {
         if(ctx.literal() != null)
             primary += getTypeScriptLiteral(ctx.literal());
 
+        if(ctx.THIS() != null)
+            primary += ctx.THIS().getText();
+
         return primary;
     }
 
