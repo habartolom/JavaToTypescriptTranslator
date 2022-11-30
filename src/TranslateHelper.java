@@ -22,6 +22,14 @@ public class TranslateHelper {
 
     public static String getTypeScriptTypeDeclaration(JavaGrammarParser.TypeDeclarationContext ctx){
         String typeDeclaration = "";
+
+        if(!ctx.classOrInterfaceModifier().isEmpty()){
+            for (int i = 0; i < ctx.classOrInterfaceModifier().size(); i++) {
+                if (ctx.classOrInterfaceModifier(i).ABSTRACT() != null)
+                    typeDeclaration += getTypeScriptClassOrInterfaceModifier(ctx.classOrInterfaceModifier(i)) + " ";
+            }
+        }
+
         if(ctx.classDeclaration() != null)
             typeDeclaration += getTypeScriptClassDeclaration(ctx.classDeclaration());
         if(ctx.interfaceDeclaration() != null)
@@ -109,6 +117,9 @@ public class TranslateHelper {
 
         else if(ctx.STATIC() != null)
             typeScriptModifier = ctx.STATIC().getText();
+
+        else if(ctx.ABSTRACT() != null)
+            typeScriptModifier = ctx.ABSTRACT().getText();
 
         return typeScriptModifier;
     }
