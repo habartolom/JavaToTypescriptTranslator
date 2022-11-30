@@ -153,6 +153,15 @@ public class TranslateHelper {
         return memberDeclaration;
     }
 
+    public static String getTypeScriptInterfaceMemberDeclaration(JavaGrammarParser.InterfaceMemberDeclarationContext ctx){
+        String interfaceMemberDeclaration = "";
+
+        if(ctx.interfaceMethodDeclaration() != null)
+            interfaceMemberDeclaration = getTypeScriptInterfaceMethodDeclaration(ctx.interfaceMethodDeclaration());
+
+        return interfaceMemberDeclaration;
+    }
+
     public static String getTypeScriptMethodDeclaration(JavaGrammarParser.MethodDeclarationContext ctx){
         String methodDeclaration = "";
 
@@ -162,6 +171,45 @@ public class TranslateHelper {
         methodDeclaration += getTypeScriptMethodBody(ctx.methodBody());
 
         return methodDeclaration;
+    }
+
+    public static String getTypeScriptInterfaceMethodDeclaration(JavaGrammarParser.InterfaceMethodDeclarationContext ctx){
+        String interfaceMethodDeclaration = "";
+
+        if(!ctx.interfaceMethodModifier().isEmpty())
+            for(int i = 0; i < ctx.interfaceMethodModifier().size(); i++){
+                interfaceMethodDeclaration += getTypeScriptInterfaceMethodModifier(ctx.interfaceMethodModifier(i)) + " ";
+            }
+
+        interfaceMethodDeclaration += getTypeScriptInterfaceCommonBodyDeclaration(ctx.interfaceCommonBodyDeclaration());
+
+        return interfaceMethodDeclaration;
+    }
+
+    public static String getTypeScriptInterfaceMethodModifier(JavaGrammarParser.InterfaceMethodModifierContext ctx){
+        String interfaceMethodModifier = "";
+
+        if(ctx.PUBLIC() != null)
+            interfaceMethodModifier = ctx.PUBLIC().getText();
+
+        else if(ctx.ABSTRACT() != null)
+            interfaceMethodModifier = ctx.ABSTRACT().getText();
+
+        else if(ctx.STATIC() != null)
+            interfaceMethodModifier = ctx.STATIC().getText();
+
+        return interfaceMethodModifier;
+    }
+
+    public static String getTypeScriptInterfaceCommonBodyDeclaration(JavaGrammarParser.InterfaceCommonBodyDeclarationContext ctx){
+        String interfaceCommonBodyDeclaration = "";
+
+        interfaceCommonBodyDeclaration += getTypeScriptIdentifier(ctx.identifier()) + " ";
+        interfaceCommonBodyDeclaration += getTypeScriptFormalParameters(ctx.formalParameters());
+        interfaceCommonBodyDeclaration += " : " + getTypeScriptTypeTypeOrVoid(ctx.typeTypeOrVoid()) + "\n";
+        interfaceCommonBodyDeclaration += getTypeScriptMethodBody(ctx.methodBody());
+
+        return interfaceCommonBodyDeclaration;
     }
 
     public static String getTypeScriptFieldDeclaration(JavaGrammarParser.FieldDeclarationContext ctx){
