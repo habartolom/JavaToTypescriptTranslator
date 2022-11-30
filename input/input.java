@@ -1,4 +1,12 @@
-public class Main {
+interface Animal {
+    public void animalSound(); // interface method (does not have a body)
+    public void run(); // interface method (does not have a body)
+}
+
+
+
+public class Ejemplos {
+    private static int uno = 1;
 
     public static void metodoSinArgumentos() {
     }
@@ -11,7 +19,7 @@ public class Main {
         return texto;
     }
 
-    public static void metodoSentenciasBasicas() {
+    public static void metodoDeclaracionesBasicas() {
         int[] x = new int[]{1, 2, 3, 4, 5};
         MyClass myClass = new MyClass(1, 2, x[5]);
         String a[] = {"Avila", "Burgos", "León", "Palencia", "Salamanca", "Segovia", "Soria", "Valladolid", "Zamora"};
@@ -34,7 +42,7 @@ public class Main {
         } else if (n == 1) {
             return 1;
         } else {
-            return fibonacciRecursivo(n - 1) + fibonacciRecursivo(n - 2);
+            return this.fibonacciRecursivo(n - 1) + this.fibonacciRecursivo(n - 2);
         }
     }
 
@@ -75,9 +83,9 @@ public class Main {
 
     public static void main(String[] args) {
         metodoSinArgumentos();
-        metodoConArgumentos(String a, int b, String[] arr);
+        metodoConArgumentos(a, b, arr);
         metodoConReturn();
-        metodoSentenciasBasicas();
+        metodoDeclaracionesBasicas();
         fibonacciRecursivo();
         tryCatchStatement();
         switchStatement();
